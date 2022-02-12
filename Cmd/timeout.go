@@ -1,4 +1,4 @@
-package Cmdline
+package Cmd
 
 import (
 	"bufio"
