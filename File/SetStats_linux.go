@@ -6,7 +6,7 @@ import (
 )
 
 // SetStats copies the file infos from src to dst
-func setStats(src, dst string) (err error) {
+func SetStats(src, dst string) (err error) {
 	fi, err := os.Stat(src)
 	if err != nil {
 		return
