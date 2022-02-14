@@ -6,6 +6,8 @@ import (
 	"io"
 	"io/fs"
 	"os"
+
+	"github.com/Synertry/GoSysUtils/File/internal"
 )
 
 // Copy copies a file from src to dst. If src and dst files exist, and are the same, then return success.
@@ -44,7 +46,7 @@ func Copy(src, dst string) (err error) {
 		return
 	}
 
-	return SetStats(src, dst)
+	return internal.SetStats(&sfi, &dst)
 }
 
 // copyContents is the core function of Copy to copy file contents
