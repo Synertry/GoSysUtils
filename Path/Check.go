@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-// CheckPath checks existence of provided path, returns error if error is not *PathError
-func CheckPath(path string) (pathExits bool, err error) {
+// Check checks existence of provided path, returns error if error is not *PathError
+func Check(path string) (pathExits bool, err error) {
 	if _, err = os.Stat(path); err == nil {
 		return true, nil
 	} else if errors.Is(err, os.ErrNotExist) {
@@ -19,10 +19,10 @@ func CheckPath(path string) (pathExits bool, err error) {
 	}
 }
 
-// CheckPathDir checks if path exists and leads to a directory
-func CheckPathDir(path string) (isDir bool, err error) {
+// CheckDir checks if path exists and leads to a directory
+func CheckDir(path string) (isDir bool, err error) {
 	var exists bool
-	exists, err = CheckPath(path)
+	exists, err = Check(path)
 	if !exists {
 		return isDir, err
 	}
