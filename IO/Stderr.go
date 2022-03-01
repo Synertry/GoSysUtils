@@ -12,3 +12,12 @@ func PrintToErr(str string) {
 		panic(fmt.Errorf("printing to os.Stderr failed: %w", err))
 	}
 }
+
+// PrintResetErr calls PrintToErr if non-empty and resets it
+func PrintResetErr(err *error) {
+	if *err != nil {
+		PrintToErr((*err).Error())
+		*err = nil
+		err = nil
+	}
+}
