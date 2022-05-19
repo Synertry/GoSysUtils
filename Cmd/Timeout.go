@@ -13,18 +13,18 @@ func Timeout(seconds int) {
 
 	go timeoutGetInput(input)
 
-	for seconds > 0 {
+	for seconds > -1 {
 
 		fmt.Printf("Waiting for %d seconds, press a key to continue ...\r", seconds)
 
 		select { // checks for input or times out
 		case <-input:
-			seconds = 0
+			seconds = -1
 		case <-time.After(time.Second):
 			seconds--
 		}
 	}
-	fmt.Println()
+	fmt.Printf("\r")
 }
 
 // timeoutGetInput reads from os.Stdin and sends it to the channel input
