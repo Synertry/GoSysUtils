@@ -12,10 +12,11 @@ import (
 )
 
 // ItemGetter is the helper struct for the GetItems method
-// Fields can be set one by one, mis-modifications to Path get fixed by fixPath
+// Fields can be set one by one, mis-modifications to Path gets fixed by fixPath
 type ItemGetter struct {
-	Path, Filter, Include, Exclude, Extension string
-	Directory, Recurse                        bool
+	Path, Filter                string
+	Include, Exclude, Extension []string
+	Directory, Recurse          bool
 }
 
 // NewItemGetter inits ItemGetter with path and returns a ItemGetter struct.
@@ -35,7 +36,7 @@ func (IG *ItemGetter) fixPath() {
 }
 
 // Set sets the additional params from ItemGetter
-func (IG *ItemGetter) Set(filter, include, exclude, extension string, directory, recurse bool) {
+func (IG *ItemGetter) Set(filter string, include, exclude, extension []string, directory, recurse bool) {
 	IG.Filter = filter
 	IG.Include = include
 	IG.Exclude = exclude
@@ -66,7 +67,6 @@ func (IG *ItemGetter) GetItemsString() ([]string, error) {
 // Filter is cross-platform case-sensitive
 // Include and Exclude are case-insensitive on Windows
 // Extension is case-insensitive
-// TODO: change input params for Include, Exclude and Extension to []string, optimally only requiring to change method patternCludes for the former
 func (IG *ItemGetter) GetItems() (dirEntries []os.DirEntry, err error) {
 	IG.fixPath()
 	err = filepath.WalkDir(IG.Path, func(p string, d os.DirEntry,
@@ -83,10 +83,18 @@ func (IG *ItemGetter) GetItems() (dirEntries []os.DirEntry, err error) {
 				return
 			}
 		} else {
-			switch {
-			case IG.Extension != "" && !strings.HasSuffix(strings.ToLower(d.Name()), strings.ToLower("."+IG.Extension)): // extension
-				return
-			case IG.Directory: // directory param true + file
+			if len(IG.Extension) > 0 {
+				hasSuffix := false
+				for _, ext := range IG.Extension {
+					if strings.HasSuffix(strings.ToLower(d.Name()), strings.ToLower("."+ext)) { // extension
+						hasSuffix = true
+						break
+					}
+				}
+				if !hasSuffix {
+					return
+				}
+			} else if IG.Directory {
 				return
 			}
 		}
@@ -96,21 +104,28 @@ func (IG *ItemGetter) GetItems() (dirEntries []os.DirEntry, err error) {
 		}
 
 		var match bool
-		if IG.Include != "" {
-			switch match, err = IG.patternCludes(&IG.Include, &d); { // include
-			case err != nil:
-				return fmt.Errorf("invalid Include param for ItemGetter: %w", err)
-			case !match:
+		if len(IG.Include) > 0 {
+			for _, include := range IG.Include {
+				if match, err = IG.patternCludes(&include, &d); match {
+					break
+				}
+				if err != nil {
+					return fmt.Errorf("invalid Include param for ItemGetter: %w", err)
+				}
+			}
+			if !match {
 				return
 			}
 		}
 
-		if IG.Exclude != "" {
-			switch match, err = IG.patternCludes(&IG.Include, &d); { // exclude
-			case err != nil:
-				return fmt.Errorf("invalid Exclude param for ItemGetter: %w", err)
-			case match:
-				return
+		if len(IG.Exclude) > 0 {
+			for _, exclude := range IG.Exclude {
+				if match, err = IG.patternCludes(&exclude, &d); match {
+					return
+				}
+				if err != nil {
+					return fmt.Errorf("invalid Exclude param for ItemGetter: %w", err)
+				}
 			}
 		}
 
