@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // Zip compresses a file or directory into a zip file
@@ -17,21 +18,18 @@ func Zip(source, dest string) (err error) {
 	if zipFile, err = os.Create(dest); err != nil { // create zip file
 		return fmt.Errorf("failed to create zip file: %w", err)
 	}
-
-	defer func() { // error handling closure
-		errC := zipFile.Close()
-		if err == nil {
-			err = errC
+	defer func(c io.Closer, err *error) { // error handling closure
+		if cerr := c.Close(); cerr != nil && *err == nil {
+			*err = fmt.Errorf("failed to close zipFile %s: %w", dest, cerr)
 		}
-	}()
+	}(zipFile, &err)
 
 	zipWriter := zip.NewWriter(zipFile) // create zip writer interface
-	defer func() {
-		errC := zipWriter.Close()
-		if err == nil {
-			err = errC
+	defer func(c io.Closer, err *error) {
+		if cerr := c.Close(); cerr != nil && *err == nil {
+			*err = fmt.Errorf("failed to zipWriter: %w", cerr)
 		}
-	}()
+	}(zipWriter, &err)
 
 	// Register a custom Deflate compressor.
 	zipWriter.RegisterCompressor(zip.Deflate, func(out io.Writer) (io.WriteCloser, error) {
@@ -43,7 +41,14 @@ func Zip(source, dest string) (err error) {
 			fmt.Printf("prevent panic by handling failure accessing a path %q: %v\n", p, e)
 			return e
 		}
-		var zipPath = filepath.ToSlash(p) // converts windows path to unix path
+		zipPath := filepath.ToSlash(strings.TrimPrefix(p, source)) // converts windows path to unix path
+
+		if len(zipPath) > 0 && (zipPath[0] == '/' || zipPath[0] == '\\') {
+			zipPath = zipPath[1:]
+		}
+		if len(zipPath) == 0 {
+			return nil
+		}
 
 		var fHeader *zip.FileHeader
 		if fHeader, err = zip.FileInfoHeader(f); err != nil {
@@ -72,12 +77,11 @@ func Zip(source, dest string) (err error) {
 		if file, err = os.Open(p); err != nil {
 			return fmt.Errorf("failed to open path %s: %w", p, err)
 		}
-		defer func() {
-			errC := file.Close()
-			if err == nil {
-				err = errC
+		defer func(c io.Closer, err *error) {
+			if cerr := c.Close(); cerr != nil && *err == nil {
+				*err = fmt.Errorf("failed to close file %s: %w", p, cerr)
 			}
-		}()
+		}(file, &err)
 
 		// copy file to zip
 		if _, err = io.Copy(zipFileWriter, file); err != nil {
