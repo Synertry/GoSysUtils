@@ -12,9 +12,8 @@ type stats struct {
 }
 
 // statsCollector gathers data on requested path
-func statsCollector(path string) (stats, error) {
-	var pS stats // pathStats
-	err := filepath.Walk(path, func(_ string, f os.FileInfo, e error) (err error) {
+func statsCollector(path string) (pS stats, err error) {
+	err = filepath.Walk(path, func(_ string, f os.FileInfo, e error) error {
 		if e != nil {
 			return e
 		}
@@ -26,43 +25,43 @@ func statsCollector(path string) (stats, error) {
 		} else {
 			pS.size += f.Size()
 		}
-		return
+		return nil
 	})
 	return pS, err
 }
 
 // GetSize returns the size of the file or directory
 func GetSize(path string) (int64, error) {
-	stats, err := statsCollector(path)
+	sts, err := statsCollector(path)
 	if err != nil {
 		return 0, err
 	}
-	return stats.size, nil
+	return sts.size, nil
 }
 
 // GetCount returns the number of files on the path
 func GetCount(path string) (int, error) {
-	stats, err := statsCollector(path)
+	sts, err := statsCollector(path)
 	if err != nil {
 		return 0, err
 	}
-	return stats.count, nil
+	return sts.count, nil
 }
 
 // GetCountDirs returns the number of directories on the path
 func GetCountDirs(path string) (int, error) {
-	stats, err := statsCollector(path)
+	sts, err := statsCollector(path)
 	if err != nil {
 		return 0, err
 	}
-	return stats.countDirs, nil
+	return sts.countDirs, nil
 }
 
 // GetCountFiles returns the number of files on the path
 func GetCountFiles(path string) (int, error) {
-	stats, err := statsCollector(path)
+	sts, err := statsCollector(path)
 	if err != nil {
 		return 0, err
 	}
-	return stats.count - stats.countDirs, nil
+	return sts.count - sts.countDirs, nil
 }
