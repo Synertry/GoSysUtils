@@ -1,6 +1,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/Synertry/GoSysUtils.svg)](https://pkg.go.dev/github.com/Synertry/GoSysUtils)
 [![License](https://img.shields.io/badge/License-Boost_1.0-lightblue.svg)](https://www.boost.org/LICENSE_1_0.txt)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/Synertry/GoSysUtils?logo=Go)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FSynertry%2FGoSysUtils.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FSynertry%2FGoSysUtils?ref=badge_shield)
 
 This repo is a collection of functions and tools which I find useful in my daily tool building for Systemadministration.
 I've exposed it to access it easier with go get, from anywhere.
@@ -29,3 +30,6 @@ Path.CheckDir builds on top of Path.Check to check if the path is also a directo
 
 ###### Path.ItemGetter
 My personal native take on approach to recreate Get-ChildItem from PowerShell.
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FSynertry%2FGoSysUtils.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FSynertry%2FGoSysUtils?ref=badge_large)
