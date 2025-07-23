@@ -10,6 +10,8 @@
 // Source: https://youtu.be/H-6-8_p88r0 (JamieGo)
 package Trie
 
+import "strings"
+
 // AlphabetSize is the number of possible characters in the trie
 const AlphabetSize = 26
 
@@ -33,6 +35,13 @@ func InitTrie() *Trie {
 
 // Insert will take in a word and add it to the trie
 func (t *Trie) Insert(w string) {
+	// Ensure the word is lowercase and has no spaces
+	if len(w) == 0 {
+		return // Do not insert empty strings
+	}
+	w = strings.ToLower(w)
+	w = strings.TrimSpace(w)
+
 	wordLength := len(w)
 	currentNode := t.root
 	for i := 0; i < wordLength; i++ {
@@ -48,6 +57,9 @@ func (t *Trie) Insert(w string) {
 // Search will take in a word and RETURN true if that word is included in the trie
 // same walking logic as Insert, but we don't need to create nodes
 func (t *Trie) Search(w string) bool {
+	w = strings.ToLower(w)
+	w = strings.TrimSpace(w)
+
 	wordLength := len(w)
 	currentNode := t.root
 	for i := 0; i < wordLength; i++ {
@@ -59,3 +71,5 @@ func (t *Trie) Search(w string) bool {
 	}
 	return currentNode.isEnd // Return true if we reached the end of a word
 }
+
+// TODO: Implement Delete method to remove words from the trie
