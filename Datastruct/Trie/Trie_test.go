@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/Synertry/GoSysUtils/Datastructure/Trie"
+	"github.com/Synertry/GoSysUtils/Datastruct/Trie"
 	"github.com/Synertry/GoSysUtils/Math/Int"
 	"github.com/Synertry/GoSysUtils/Slice"
 	"github.com/Synertry/GoSysUtils/Str"
