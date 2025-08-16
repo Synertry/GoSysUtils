@@ -1,3 +1,5 @@
+# GoSysUtils
+
 [![Go Reference](https://pkg.go.dev/badge/github.com/Synertry/GoSysUtils.svg)](https://pkg.go.dev/github.com/Synertry/GoSysUtils)
 [![License](https://img.shields.io/badge/License-Boost_1.0-lightblue.svg)](https://www.boost.org/LICENSE_1_0.txt)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/Synertry/GoSysUtils?logo=Go)
@@ -10,7 +12,7 @@ I've exposed it to access it easier with go get, from anywhere.
 
 I advise you to fork this repository if you want to use it,
 as I will migrate to a slightly different name [GoSynUtils](https://github.com/Synertry/GoSynUtils) as well as trying to go for 0 dependencies.
-Also I made the wrong assumption that I needed to capitalize package to export them. You only need to export it's members.
+Also, I made the wrong assumption that I needed to capitalize package names to export them. You only need to export its members and interfaces.
 
 ## Package Overview
 
