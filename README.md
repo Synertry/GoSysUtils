@@ -11,7 +11,7 @@ I've exposed it to access it easier with go get, from anywhere.
 ## Going Forward 2025-08-03
 
 I advise you to fork this repository if you want to use it,
-as I will migrate to a slightly different name [GoSynUtils](https://github.com/Synertry/GoSynUtils) as well as trying to go for 0 dependencies.
+as I will migrate to a slightly different name [gosynutils](https://github.com/Synertry/gosynutils) as well as trying to go for 0 dependencies.
 Also, I made the wrong assumption that I needed to capitalize package names to export them. You only need to export its members and interfaces.
 
 ## Package Overview
